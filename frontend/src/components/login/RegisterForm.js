@@ -86,13 +86,14 @@ export default function RegisterForm() {
           onSubmit={() => {
             let current_date = new Date();
             let picked_date = new Date(bYear, bMonth - 1, bDay);
-            let atleast14 = new Date(1970 + 14, 0, 1);
-            let noMoreThan70 = new Date(1970 + 70, 0, 1);
+            let atleast14 = new Date(1980 + 14, 0, 1);
+            // how many seconds it takes to be 14
+            let noMoreThan80 = new Date(1970 + 70, 0, 1);
             if (current_date - picked_date < atleast14) {
               setDateError(
                 "it looks like you(ve enetered the wrong info.Please make sure that you use your real date of birth."
               );
-            } else if (current_date - picked_date > noMoreThan70) {
+            } else if (current_date - picked_date > noMoreThan80) {
               setDateError(
                 "it looks like you(ve enetered the wrong info.Please make sure that you use your real date of birth."
               );
