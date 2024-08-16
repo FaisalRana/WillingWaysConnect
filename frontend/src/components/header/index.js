@@ -15,12 +15,24 @@ import {
 } from "../../svg";
 import { useSelector } from "react-redux";
 import SearchMenu from "./SearchMenu";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import AllMenu from "./AllMenu";
+import useClickOutside from "../../helpers/clickOutside";
+import UserMenu from "./userMenu";
 export default function Header() {
   const { user } = useSelector((user) => ({ ...user }));
   const color = "#65676b";
   const [showSearchMenu, setShowSearchMenu] = useState(false);
-
+  const [showAllMenu, setShowAllMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const allmenu = useRef(null);
+  const usermenu = useRef(null);
+  useClickOutside(allmenu, () => {
+    setShowAllMenu(false);
+  });
+  useClickOutside(usermenu, () => {
+    setShowUserMenu(false);
+  });
   return (
     <header>
       <div className="header_left">
@@ -60,7 +72,7 @@ export default function Header() {
         <Link to="/" className="middle_icon hover1">
           <Market color={color} />
         </Link>
-        <Link to="/" className="middle_icon hover1">
+        <Link to="/" className="middle_icon hover1 ">
           <Gaming color={color} />
         </Link>
       </div>
@@ -69,8 +81,16 @@ export default function Header() {
           <img src={user?.picture} alt="" />
           <span>{user?.first_name}</span>
         </Link>
-        <div className="circle_icon hover1">
-          <Menu />
+        <div className="circle_icon hover1" ref={allmenu}>
+          <div
+            onClick={() => {
+              setShowAllMenu((prev) => !prev);
+            }}
+          >
+            <Menu />
+          </div>
+
+          {showAllMenu && <AllMenu />}
         </div>
         <div className="circle_icon hover1">
           <Messenger />
@@ -79,8 +99,16 @@ export default function Header() {
           <Notifications />
           <div className="right_notification">5</div>
         </div>
-        <div className="circle_icon hover1">
-          <ArrowDown />
+        <div className="circle_icon hover1" ref={usermenu}>
+          <div
+            onClick={() => {
+              setShowUserMenu((prev) => !prev);
+            }}
+          >
+            <ArrowDown />
+          </div>
+
+          {showUserMenu && <UserMenu user={user} />}
         </div>
       </div>
     </header>
