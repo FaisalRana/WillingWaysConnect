@@ -89,13 +89,22 @@ exports.register = async (req, res) => {
 };
 exports.activateAccount = async (req, res) => {
   try {
+    const validUser = req.user.id;
     const { token } = req.body;
     const user = jwt.verify(token, process.env.TOKEN_SECRET);
     const check = await User.findById(user.id);
+    if (validUser !== user.id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Activation failed: You don't have the authorization to complete this operation.",
+        });
+    }
     if (check.verified == true) {
       return res
         .status(400)
-        .json({ message: "this email is already activated" });
+        .json({ message: "This email is already activated" });
     } else {
       await User.findByIdAndUpdate(user.id, { verified: true });
       return res
@@ -108,7 +117,6 @@ exports.activateAccount = async (req, res) => {
 };
 exports.login = async (req, res) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
@@ -136,4 +144,8 @@ exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+exports.auth = (req, res) => {
+  res.json("welcom from auth");
 };

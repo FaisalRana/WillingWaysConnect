@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import CreatePost from "../../components/createPost";
 import Header from "../../components/header";
