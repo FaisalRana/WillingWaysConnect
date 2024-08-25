@@ -1,23 +1,26 @@
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import CreatePost from "../../components/createPost";
 import Header from "../../components/header";
 import LeftHome from "../../components/home/left";
 import RightHome from "../../components/home/right";
 import Stories from "../../components/home/stories";
-import "./style.css";
-import { useEffect, useState } from "react";
 import ActivateForm from "./ActivateForm";
-import { useNavigate, useParams } from "react-router-dom";
+import "./style.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 export default function Activate() {
-  const { user } = useSelector((user) => ({ ...user }));
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { token } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((user) => ({ ...user }));
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { token } = useParams();
+  useEffect(() => {
+    activateAccount();
+  }, []);
   const activateAccount = async () => {
     try {
       setLoading(true);
@@ -32,7 +35,11 @@ export default function Activate() {
       );
       setSuccess(data.message);
       Cookies.set("user", JSON.stringify({ ...user, verified: true }));
-      dispatch({ type: "VERIFY", payload: true });
+      dispatch({
+        type: "VERIFY",
+        payload: true,
+      });
+
       setTimeout(() => {
         navigate("/");
       }, 3000);
@@ -43,15 +50,12 @@ export default function Activate() {
       }, 3000);
     }
   };
-  useEffect(() => {
-    activateAccount();
-  }, []);
   return (
     <div className="home">
       {success && (
         <ActivateForm
           type="success"
-          header="Account verification succeeded"
+          header="Account verification succeded."
           text={success}
           loading={loading}
         />
@@ -59,7 +63,7 @@ export default function Activate() {
       {error && (
         <ActivateForm
           type="error"
-          header="Account verification failed"
+          header="Account verification failed."
           text={error}
           loading={loading}
         />
