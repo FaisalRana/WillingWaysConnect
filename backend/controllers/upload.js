@@ -8,6 +8,7 @@ cloudinary.config({
 exports.uploadImages = async (req, res) => {
   try {
     const { path } = req.body;
+    console.log(path);
     let files = Object.values(req.files).flat();
     let images = [];
     for (const file of files) {
