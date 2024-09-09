@@ -8,7 +8,6 @@ cloudinary.config({
 exports.uploadImages = async (req, res) => {
   try {
     const { path } = req.body;
-    console.log(path);
     let files = Object.values(req.files).flat();
     let images = [];
     for (const file of files) {
@@ -23,7 +22,7 @@ exports.uploadImages = async (req, res) => {
 };
 
 const uploadToCloudinary = async (file, path) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     cloudinary.v2.uploader.upload(
       file.tempFilePath,
       {
@@ -32,7 +31,7 @@ const uploadToCloudinary = async (file, path) => {
       (err, res) => {
         if (err) {
           removeTmp(file.tempFilePath);
-          return res.status(400).json({ message: "Upload image failed." });
+          reject(err);
         }
         resolve({
           url: res.secure_url,

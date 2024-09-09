@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export const createPost = async (
   type,
   background,
@@ -11,7 +10,13 @@ export const createPost = async (
   try {
     const { data } = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/createPost`,
-      { type, background, text, images, user },
+      {
+        type,
+        background,
+        text,
+        images,
+        user,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,

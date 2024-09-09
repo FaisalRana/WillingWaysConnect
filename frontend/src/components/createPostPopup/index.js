@@ -11,7 +11,6 @@ import { useDispatch } from "react-redux";
 import PostError from "./PostError";
 import dataURItoBlob from "../../helpers/dataURItoBlob";
 import { uploadImages } from "../../functions/uploadImages";
-
 export default function CreatePostPopup({ user, setVisible }) {
   const dispatch = useDispatch();
   const popup = useRef(null);
@@ -45,33 +44,34 @@ export default function CreatePostPopup({ user, setVisible }) {
       }
     } else if (images && images.length) {
       setLoading(true);
-      const postImages = images.map((image) => {
-        return dataURItoBlob(image);
+      const postImages = images.map((img) => {
+        return dataURItoBlob(img);
       });
       const path = `${user.username}/post Images`;
-      const formData = new FormData();
+      let formData = new FormData();
       formData.append("path", path);
       postImages.forEach((image) => {
         formData.append("file", image);
       });
-      const imagesURLArray = await uploadImages(formData, path);
-      const postResponse = await createPost(
+      const response = await uploadImages(formData, path, user.token);
+
+      const res = await createPost(
         null,
         null,
         text,
-        imagesURLArray,
+        response,
         user.id,
         user.token
       );
-      if (postResponse === "ok") {
-        setBackground("");
+      setLoading(false);
+      if (res === "ok") {
         setText("");
+        setImages("");
         setVisible(false);
       } else {
-        setError(postResponse);
+        setError(res);
       }
     } else if (text) {
-      // If there is text in the post
       setLoading(true);
       const response = await createPost(
         null,
@@ -83,13 +83,14 @@ export default function CreatePostPopup({ user, setVisible }) {
       );
       setLoading(false);
       if (response === "ok") {
+        setBackground("");
         setText("");
         setVisible(false);
       } else {
         setError(response);
       }
     } else {
-      console.log("No data to post");
+      console.log("nothing");
     }
   };
   return (
@@ -141,6 +142,7 @@ export default function CreatePostPopup({ user, setVisible }) {
             images={images}
             setImages={setImages}
             setShowPrev={setShowPrev}
+            setError={setError}
           />
         )}
         <AddToYourPost setShowPrev={setShowPrev} />

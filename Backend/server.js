@@ -1,10 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 const { readdirSync } = require("fs");
 const dotenv = require("dotenv");
-const fileUpload = require("express-fileupload");
-
 dotenv.config();
 
 const app = express();
