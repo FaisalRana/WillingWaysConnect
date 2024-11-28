@@ -18,7 +18,8 @@ export default function EmojiPickerBackgrounds({
   useEffect(() => {
     textRef.current.selectionEnd = cursorPosition;
   }, [cursorPosition]);
-  const handleEmoji = (e, { emoji }) => {
+  const handleEmoji = ({ emoji }) => {
+    console.log(emoji);
     const ref = textRef.current;
     ref.focus();
     const start = text.substring(0, ref.selectionStart);
